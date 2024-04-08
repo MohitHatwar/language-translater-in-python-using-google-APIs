@@ -1,0 +1,27 @@
+pip install google-cloud-translate
+  from google.cloud import translate_v2 as translate
+
+def translate_text_auto_detect(text, target_languages):
+    # Initialize the translation client
+    client = translate.Client()
+
+    # Detect the input text language
+    input_language = client.detect_language(text)['language']
+
+    # Translate the input text into multiple target languages
+    translations = {}
+    for target_language in target_languages:
+        translation = client.translate(text, target_language=target_language)
+        translations[target_language] = translation['translatedText']
+
+    return input_language, translations
+
+# Example usage
+input_text = "Hello, how are you?"
+target_languages = ["fr", "es", "de"]  # Target language codes (e.g., 'fr' for French)
+input_language, translated_texts = translate_text_auto_detect(input_text, target_languages)
+
+print(f"Input language detected: {input_language}")
+print("Translated texts:")
+for lang, text in translated_texts.items():
+    print(f"{lang}: {text}")
